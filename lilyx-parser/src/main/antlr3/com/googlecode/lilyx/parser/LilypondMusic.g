@@ -203,7 +203,11 @@ propertyUnset
     ;
     
 restEvent
-    : REST_EVENT DURATION makeDuration
+    : REST_EVENT DURATION d=makeDuration
+      {
+        RestEvent rest = new RestEvent($d.duration);
+        currentChord.addEvent(rest);
+      }
     ;        
     
 sequentialMusic

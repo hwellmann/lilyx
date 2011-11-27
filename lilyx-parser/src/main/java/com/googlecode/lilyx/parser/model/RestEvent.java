@@ -4,7 +4,7 @@ public class RestEvent extends MusicEvent {
 
     private Duration duration;
 
-    public RestEvent(Duration duration, Pitch pitch) {
+    public RestEvent(Duration duration) {
         this.duration = duration;
     }
 
