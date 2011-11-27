@@ -9,16 +9,23 @@ options {
 package com.googlecode.lilyx.parser;
 
 import com.googlecode.lilyx.parser.model.*;
+import java.util.Deque;
+import java.util.LinkedList;
 }
 
 @parser::members {
+    private Deque<Context> contextStack = new LinkedList<Context>(); 
+
     private StaffGroup currentStaffGroup = new StaffGroup();
     private Staff currentStaff = new Staff();
-    private Context currentContext = new Context();
     private ChordEvent currentChord = new ChordEvent();
     
     public StaffGroup getStaffGroup() {
         return currentStaffGroup;
+    }
+    
+    private Context currentContext() {
+        return contextStack.peek();
     }
 }
 
@@ -91,33 +98,56 @@ contextSpeccedMusic
       ELEMENT expression
       (CONTEXT_TYPE contextType)? 
       (CREATE_NEW expression)? 
+      {
+          contextStack.pop();
+      }
     ;
     
 contextType
     : BOTTOM
-    
+      {
+        contextStack.push(new Context());
+      }
     | CHOIR_STAFF     
-      { currentStaffGroup = new ChoirStaff(); }
+      { 
+        currentStaffGroup = new ChoirStaff();
+        contextStack.push(currentStaffGroup); 
+      }
     
     | LYRICS
       { 
-        currentContext = new Lyrics();
-        currentStaff.addLyrics((Lyrics) currentContext); 
+        Lyrics lyrics = new Lyrics();
+        contextStack.push(lyrics);
+        currentStaff.addLyrics(lyrics); 
       }
 
     | SCORE
+      {
+        contextStack.push(new Context());
+      }
     | STAFF
       { 
-        currentStaff = new Staff(); 
-        currentStaffGroup.addStaff(currentStaff); 
+        Staff staff = new Staff();
+        if (contextStack.peek() instanceof StaffGroup) {
+            currentStaffGroup.addStaff(staff);
+            currentStaff = staff;             
+        }
+        contextStack.push(staff); 
       }
 
     | STAFF_GROUP
+      {
+        contextStack.push(new Context());
+      }
     | TIMING
+      {
+        contextStack.push(new Context());
+      }
     | VOICE
       {  
-         currentContext = new Voice();
-         currentStaff.addVoice((Voice) currentContext); 
+         Voice voice = new Voice();
+         currentStaff.addVoice(voice);
+         contextStack.push(voice); 
       }
     ;     
     
@@ -125,7 +155,7 @@ eventChord
     : EVENT_CHORD
       {
          currentChord = new ChordEvent();
-         currentContext.addEvent(currentChord);
+         currentContext().addEvent(currentChord);
       } 
         
       ELEMENTS expression
