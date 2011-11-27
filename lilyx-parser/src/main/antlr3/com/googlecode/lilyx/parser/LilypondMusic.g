@@ -11,12 +11,26 @@ package com.googlecode.lilyx.parser;
 import com.googlecode.lilyx.parser.model.*;
 }
 
+@parser::members {
+    private StaffGroup currentStaffGroup = new StaffGroup();
+    private Staff currentStaff = new Staff();
+    private Context currentContext = new Context();
+    private ChordEvent currentChord = new ChordEvent();
+    
+    public StaffGroup getStaffGroup() {
+        return currentStaffGroup;
+    }
+}
+
 @lexer::header {
 package com.googlecode.lilyx.parser;
 }
 
-score 
+score returns [Score score]
    : expression EOF! 
+     {
+         $score = new Score(currentStaffGroup);
+     }
    ;
   
 
@@ -81,17 +95,40 @@ contextSpeccedMusic
     
 contextType
     : BOTTOM
-    | CHOIR_STAFF
+    
+    | CHOIR_STAFF     
+      { currentStaffGroup = new ChoirStaff(); }
+    
     | LYRICS
+      { 
+        currentContext = new Lyrics();
+        currentStaff.addLyrics((Lyrics) currentContext); 
+      }
+
     | SCORE
     | STAFF
+      { 
+        currentStaff = new Staff(); 
+        currentStaffGroup.addStaff(currentStaff); 
+      }
+
     | STAFF_GROUP
     | TIMING
     | VOICE
+      {  
+         currentContext = new Voice();
+         currentStaff.addVoice((Voice) currentContext); 
+      }
     ;     
     
 eventChord
-    : EVENT_CHORD ELEMENTS expression
+    : EVENT_CHORD
+      {
+         currentChord = new ChordEvent();
+         currentContext.addEvent(currentChord);
+      } 
+        
+      ELEMENTS expression
     ;        
     
 extenderEvent
@@ -112,8 +149,12 @@ multiMeasureRestMusic
     : MULTI_MEASURE_REST_MUSIC DURATION makeDuration ARTICULATIONS expression
     ;    
     
-noteEvent
-    : NOTE_EVENT DURATION makeDuration PITCH makePitch
+noteEvent returns [NoteEvent note]
+    : NOTE_EVENT DURATION d=makeDuration PITCH p=makePitch
+      {
+        $note = new NoteEvent($d.duration, $p.pitch);
+        currentChord.addEvent($note);
+      }
     ;        
     
 overrideProperty

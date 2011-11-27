@@ -33,7 +33,7 @@
                           #:line
                           (#:simple "Superius" #:hspace 1.0))
                         'symbol
-                        'instrument))
+                        'instrumentName))
                     (make-music
                       'ContextSpeccedMusic
                       'context-type
@@ -3404,7 +3404,7 @@
                         'value
                         (markup #:line (#:simple "Contra" #:hspace 1.0))
                         'symbol
-                        'instrument))
+                        'instrumentName))
                     (make-music
                       'ContextSpeccedMusic
                       'context-type
@@ -6305,7 +6305,7 @@
                         'value
                         (markup #:line (#:simple "Tenor" #:hspace 1.0))
                         'symbol
-                        'instrument))
+                        'instrumentName))
                     (make-music
                       'ContextSpeccedMusic
                       'context-type
@@ -8141,7 +8141,7 @@
                         'value
                         (markup #:line (#:simple "Bassus" #:hspace 1.0))
                         'symbol
-                        'instrument))
+                        'instrumentName))
                     (make-music
                       'ContextSpeccedMusic
                       'context-type

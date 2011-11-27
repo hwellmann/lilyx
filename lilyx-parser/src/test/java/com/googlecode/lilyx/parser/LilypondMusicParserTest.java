@@ -50,6 +50,7 @@ public class LilypondMusicParserTest {
 		score_return score = parser.score();
 		assertNotNull(score);
 		
+		
 		CommonTree tree = (CommonTree) score.getTree();
 		XmlTreeWriter writer = new XmlTreeWriter();
 		String baseName = fileName.substring(0, fileName.indexOf('.'));
