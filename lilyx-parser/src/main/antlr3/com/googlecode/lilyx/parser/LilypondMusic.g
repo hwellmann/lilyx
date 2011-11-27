@@ -94,12 +94,12 @@ eventChord
     
 extenderEvent
     : EXTENDER_EVENT
-    | LEFT_PAREN QUOTE 'ExtenderEvent' RIGHT_PAREN
+    | LEFT_PAREN QUOTE 'ExtenderEvent' RIGHT_PAREN -> EXTENDER_EVENT
     ;
 
 hyphenEvent
     : HYPHEN_EVENT
-    | LEFT_PAREN QUOTE 'HyphenEvent' RIGHT_PAREN
+    | LEFT_PAREN QUOTE 'HyphenEvent' RIGHT_PAREN -> HYPHEN_EVENT
     ;    
     
 lyricEvent
@@ -147,7 +147,7 @@ slurEvent
     
 tieEvent
     : TIE_EVENT
-    | LEFT_PAREN QUOTE 'TieEvent' RIGHT_PAREN
+    | LEFT_PAREN QUOTE 'TieEvent' RIGHT_PAREN -> TIE_EVENT
     ;            
     
 makeDuration
