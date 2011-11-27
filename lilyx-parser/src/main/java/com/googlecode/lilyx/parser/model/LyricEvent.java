@@ -2,27 +2,27 @@ package com.googlecode.lilyx.parser.model;
 
 public class LyricEvent extends MusicEvent {
 
-	private Duration duration;
-	private String text;
-	
-	public LyricEvent(Duration duration, String text) {
-		this.duration = duration;
-		this.text = text;
-	}
+    private Duration duration;
+    private String text;
 
-	public Duration getDuration() {
-		return duration;
-	}
+    public LyricEvent(Duration duration, String text) {
+        this.duration = duration;
+        this.text = text;
+    }
 
-	public void setDuration(Duration duration) {
-		this.duration = duration;
-	}
+    public Duration getDuration() {
+        return duration;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }
