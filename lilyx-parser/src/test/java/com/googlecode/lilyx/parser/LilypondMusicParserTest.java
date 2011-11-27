@@ -30,6 +30,7 @@ public class LilypondMusicParserTest {
 				{ "makeDuration1.scm" },
 				{ "eventChord1.scm" },
 				{ "eventChord2.scm" },
+				{ "pitchList.scm" },
 				{ "staff1.scm" },
 				{ "markup.scm" },
 				{ "DuToutPlongiet.scm" },

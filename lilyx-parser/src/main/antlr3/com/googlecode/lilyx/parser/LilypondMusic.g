@@ -7,6 +7,8 @@ options {
 
 @parser::header {
 package com.googlecode.lilyx.parser;
+
+import com.googlecode.lilyx.parser.model.*;
 }
 
 @lexer::header {
@@ -150,12 +152,32 @@ tieEvent
     | LEFT_PAREN QUOTE 'TieEvent' RIGHT_PAREN -> TIE_EVENT
     ;            
     
-makeDuration
-    : LEFT_PAREN! MAKE_DURATION^ NUMBER NUMBER NUMBER NUMBER RIGHT_PAREN!
+makeDuration returns [Duration duration]
+    : LEFT_PAREN! MAKE_DURATION^ 
+      len=INTEGER dot=INTEGER 
+      number number RIGHT_PAREN!    
+      {
+         $duration = new Duration(Integer.parseInt($len.text), Integer.parseInt($dot.text));
+      }
     ;    
     
-makePitch
-    : LEFT_PAREN! MAKE_PITCH^ NUMBER NUMBER NUMBER RIGHT_PAREN!
+number
+    : fraction
+    | DECIMAL_NUMBER
+    | INTEGER
+    ; 
+    
+fraction returns [float value]
+    : n=INTEGER                 { $value = Integer.parseInt($n.text); } 
+      ('/' d=INTEGER            { $value /= Integer.parseInt($d.text); }
+      )?
+    ;    
+    
+makePitch returns [Pitch pitch]
+    : LEFT_PAREN! MAKE_PITCH^ octave=INTEGER note=INTEGER alter=fraction RIGHT_PAREN!
+      {
+        $pitch = new Pitch(Integer.parseInt($octave.text), Integer.parseInt($note.text), $alter.value);
+      }
     ;    
     
 markup
@@ -173,7 +195,7 @@ booleanFunctionCall
     ;    
     
 literal
-    : NUMBER
+    : number
     | SYMBOL_LITERAL
     | STRING_LITERAL
     | BOOLEAN_LITERAL
@@ -241,8 +263,11 @@ APOSTROPHE: '\''; // for derivative
 LEFT_PAREN : '(' ;
 RIGHT_PAREN : ')' ;
 
-NUMBER: INTEGER (('/'|'.') INTEGER)? ;
-fragment INTEGER: '0' | SIGN? '1'..'9' '0'..'9'*;
+DECIMAL_NUMBER : INTEGER_ '.' INTEGER_ ;
+
+INTEGER : INTEGER_ ;
+
+fragment INTEGER_: '0' | SIGN? '1'..'9' '0'..'9'*;
 NAME: LETTER (LETTER | DIGIT | '_' | '-' | ':')*;
 
 SIGN: '+' | '-';
