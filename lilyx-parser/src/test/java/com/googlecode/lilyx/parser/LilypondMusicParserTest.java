@@ -1,10 +1,12 @@
 package com.googlecode.lilyx.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +52,11 @@ public class LilypondMusicParserTest {
         LilypondMusicParser parser = new LilypondMusicParser(tokenStream);
         score_return score = parser.score();
         assertNotNull(score);
+        
+        PrintWriter pw = new PrintWriter(System.out);
+        VoiceWriter voiceWriter = new VoiceWriter(score.score, pw);
+        voiceWriter.write();
+        pw.close();
 
         CommonTree tree = (CommonTree) score.getTree();
         XmlTreeWriter writer = new XmlTreeWriter();
