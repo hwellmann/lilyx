@@ -176,7 +176,11 @@ lyricEvent
     ;
     
 multiMeasureRestMusic
-    : MULTI_MEASURE_REST_MUSIC DURATION makeDuration ARTICULATIONS expression
+    : MULTI_MEASURE_REST_MUSIC DURATION d=makeDuration ARTICULATIONS expression
+      {
+        RestEvent rest = new RestEvent($d.duration);
+        currentChord.addEvent(rest);
+      }
     ;    
     
 noteEvent returns [NoteEvent note]

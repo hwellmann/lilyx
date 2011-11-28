@@ -11,6 +11,7 @@
   <modules>
     <module>lilyx-parser</module>
     <module>lilyx-musicxml</module>
+    <module>lilyx-converter</module>
   </modules>
 
   <build>
